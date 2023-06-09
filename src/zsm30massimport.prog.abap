@@ -178,7 +178,7 @@ FORM f_call_sm30.
 
   DATA(import_maint_struc) = cl_abap_structdescr=>create( maint_struc_components ).
 
-  DATA(import_data_table) = cl_abap_tabledescr=>create( p_line_type  = import_maint_struc ).
+  DATA(import_data_table) = cl_abap_tabledescr=>create( p_line_type = import_maint_struc ).
 
   CREATE DATA import_data_struc_ref TYPE HANDLE import_maint_struc.
   ASSIGN import_data_struc_ref->* TO <import_data_line>.
