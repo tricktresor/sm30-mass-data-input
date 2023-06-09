@@ -415,7 +415,7 @@ FORM f_export_to_pc.
 
 * Get trailing blank
     cl_gui_frontend_services=>gui_download(
-         EXPORTING filename     = filename
+         EXPORTING filename              = filename
                    filetype     = 'ASC'
                    write_field_separator = 'X'
          CHANGING  data_tab     = <ft_tab> ).
