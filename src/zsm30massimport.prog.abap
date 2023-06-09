@@ -160,7 +160,7 @@ FORM f_call_sm30.
   ELSE.
     cl_gui_frontend_services=>clipboard_import(
       IMPORTING
-        data  = import_data_csv ).
+        data = import_data_csv ).
     delimiter = cl_abap_char_utilities=>horizontal_tab.
   ENDIF.
 
