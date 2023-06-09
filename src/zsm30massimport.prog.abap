@@ -68,23 +68,23 @@ FORM f_init.
      "Execute and Print.
     ( fcode = 'PRIN' )
      "Execute.
-    ( fcode = 'ONLI' ) 
+    ( fcode = 'ONLI' )
     "Execute in Background
-    ( fcode = 'SJOB' )  
+    ( fcode = 'SJOB' )
     "Variant Delete
-    ( fcode = 'VDEL' ) 
+    ( fcode = 'VDEL' )
      "Variant Save
-    ( fcode = 'SPOS' ) 
+    ( fcode = 'SPOS' )
      "Get...
-    ( fcode = 'GET'  ) 
+    ( fcode = 'GET'  )
      "Display...
-    ( fcode = 'VSHO' ) 
+    ( fcode = 'VSHO' )
     "Delete...
-    ( fcode = 'VDEL' )  
+    ( fcode = 'VDEL' )
     "Save as Variant...
-    ( fcode = 'SPOS' )  
+    ( fcode = 'SPOS' )
     "User Variables...
-    ( fcode = 'LVUV' ) ). 
+    ( fcode = 'LVUV' ) ).
 
   CALL FUNCTION 'RS_SET_SELSCREEN_STATUS'
     EXPORTING
@@ -133,8 +133,17 @@ FORM import_file CHANGING import_data_csv TYPE _text_tab.
     lv_filename TYPE string,
     lt_files    TYPE filetable,
     rc          TYPE i.
-
-  lv_filename = zcl_file_utility=>pc_file_open_dialog( ).
+cl_gui_frontend_services=>file_open_dialog(
+  CHANGING
+    file_table              = lt_files
+    rc                      = rc                " Return Code, Number of Files or -1 If Error Occurred
+  EXCEPTIONS
+    others                  = 5 ).
+IF sy-subrc <> 0 or lt_files is INITIAL.
+return.
+ENDIF.
+*  lv_filename = zcl_file_utility=>pc_file_open_dialog( ).
+  lv_filename = lt_files[ 1 ]-filename.
 
   IF lv_filename IS NOT INITIAL.
 
@@ -239,15 +248,15 @@ FORM f_call_sm30.
     TABLES
       data                         = <import_data_tab>
     EXCEPTIONS
-      client_reference             = 1 
-      foreign_lock                 = 2 
-      invalid_action               = 3 
-      no_clientindependent_auth    = 4 
-      no_database_function         = 5 
-      no_show_auth                 = 6 
-      no_tvdir_entry               = 7 
-      no_upd_auth                  = 8 
-      only_show_allowed            = 9 
+      client_reference             = 1
+      foreign_lock                 = 2
+      invalid_action               = 3
+      no_clientindependent_auth    = 4
+      no_database_function         = 5
+      no_show_auth                 = 6
+      no_tvdir_entry               = 7
+      no_upd_auth                  = 8
+      only_show_allowed            = 9
       system_failure               = 10
       unknown_field_in_dba_sellist = 11
       view_not_found               = 12

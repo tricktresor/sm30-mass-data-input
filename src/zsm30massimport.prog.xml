@@ -11,40 +11,9 @@
    </PROGDIR>
    <TPOOL>
     <item>
-     <ID>I</ID>
-     <KEY>016</KEY>
-     <ENTRY>Continue</ENTRY>
-     <LENGTH>18</LENGTH>
-    </item>
-    <item>
-     <ID>I</ID>
-     <KEY>017</KEY>
-     <ENTRY>Stop</ENTRY>
-     <LENGTH>14</LENGTH>
-    </item>
-    <item>
      <ID>R</ID>
      <ENTRY>SM30 mass upload/download data</ENTRY>
      <LENGTH>54</LENGTH>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>PCLPB</KEY>
-     <ENTRY>Import from Clipboard</ENTRY>
-     <LENGTH>29</LENGTH>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>PFILE</KEY>
-     <ENTRY>Import from File</ENTRY>
-     <LENGTH>24</LENGTH>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>PTABLE</KEY>
-     <ENTRY>.</ENTRY>
-     <LENGTH>9</LENGTH>
-     <SPLIT>D</SPLIT>
     </item>
    </TPOOL>
    <I18N_TPOOL>
