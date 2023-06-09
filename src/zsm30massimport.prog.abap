@@ -138,7 +138,7 @@ FORM import_file CHANGING import_data_csv TYPE _text_tab.
        EXCEPTIONS
          file_open_error = 1
          file_read_error = 2
-         OTHERS                  = 3 ).
+         OTHERS          = 3 ).
 
     IF sy-subrc <> 0.
       MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
