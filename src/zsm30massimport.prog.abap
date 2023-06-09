@@ -131,7 +131,7 @@ FORM import_file CHANGING import_data_csv TYPE _text_tab.
     cl_gui_frontend_services=>gui_upload(
        EXPORTING
          filename        = lv_filename
-         filetype                = 'ASC'
+         filetype        = 'ASC'
 *         has_field_separator     = 'X'
        CHANGING
          data_tab                = import_data_csv
