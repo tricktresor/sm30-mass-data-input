@@ -30,10 +30,10 @@ FIELD-SYMBOLS:
   <ft_line_key> TYPE data,
   <ft_tab>      TYPE STANDARD TABLE.
 
-*— Declaration for factory ALV
+" Declaration for factory ALV
 DATA: salv TYPE REF TO cl_salv_table.
 
-*— Selection Screen
+"Selection Screen
 PARAMETERS: ptable TYPE rsrd1-tbma_val AS LISTBOX VISIBLE LENGTH 40 USER-COMMAND ptab.
 SELECTION-SCREEN FUNCTION KEY 3.
 SELECTION-SCREEN FUNCTION KEY 4.
@@ -42,7 +42,7 @@ SELECTION-SCREEN FUNCTION KEY 5.
 INITIALIZATION.
   PERFORM f_init.
 
-*— Validate table name
+"Validate table name
 AT SELECTION-SCREEN ON ptable.
   PERFORM f_validate_table.
 
@@ -52,7 +52,7 @@ AT SELECTION-SCREEN.
     WHEN gc-import_file OR gc-import_clipboard.
       CHECK ptable IS NOT INITIAL.
       PERFORM f_call_sm30.
-    WHEN gc-export_file." 'FC04'.
+    WHEN gc-export_file.
       CHECK ptable IS NOT INITIAL.
       PERFORM f_export_to_pc.
     WHEN 'PTAB'.
@@ -65,16 +65,26 @@ FORM f_init.
          lt_exclude TYPE TABLE OF rsexfcode.
 
   lt_exclude = VALUE #(
-    ( fcode = 'PRIN' )  "Execute and Print.
-    ( fcode = 'ONLI' )  "Execute.
-    ( fcode = 'SJOB' )  "Execute in Background
-    ( fcode = 'VDEL' )  "Variant Delete
-    ( fcode = 'SPOS' )  "Variant Save
-    ( fcode = 'GET'  )   "Get...
-    ( fcode = 'VSHO' )  "Display...
-    ( fcode = 'VDEL' )  "Delete...
-    ( fcode = 'SPOS' )  "Save as Variant...
-    ( fcode = 'LVUV' ) ). "User Variables...
+     "Execute and Print.
+    ( fcode = 'PRIN' )
+     "Execute.
+    ( fcode = 'ONLI' ) 
+    "Execute in Background
+    ( fcode = 'SJOB' )  
+    "Variant Delete
+    ( fcode = 'VDEL' ) 
+     "Variant Save
+    ( fcode = 'SPOS' ) 
+     "Get...
+    ( fcode = 'GET'  ) 
+     "Display...
+    ( fcode = 'VSHO' ) 
+    "Delete...
+    ( fcode = 'VDEL' )  
+    "Save as Variant...
+    ( fcode = 'SPOS' )  
+    "User Variables...
+    ( fcode = 'LVUV' ) ). 
 
   CALL FUNCTION 'RS_SET_SELSCREEN_STATUS'
     EXPORTING
@@ -155,8 +165,8 @@ FORM f_call_sm30.
   DATA(import_table) = CONV tabname( ptable ).
 
   IF sscrfields-ucomm = gc-import_file.
-    PERFORM import_file CHANGING import_data_csv. "TYPE _text_tab
-    DATA(delimiter) = cl_abap_char_utilities=>horizontal_tab." ';'.
+    PERFORM import_file CHANGING import_data_csv.
+    DATA(delimiter) = cl_abap_char_utilities=>horizontal_tab.
   ELSE.
     cl_gui_frontend_services=>clipboard_import(
       IMPORTING
@@ -229,18 +239,18 @@ FORM f_call_sm30.
     TABLES
       data                         = <import_data_tab>
     EXCEPTIONS
-      client_reference             = 1              " View is tied to another client
-      foreign_lock                 = 2              " View/Table is locked by another user
-      invalid_action               = 3              " ACTION contains invalid values
-      no_clientindependent_auth    = 4              " no authorization for maintaining client-independent tables/v
-      no_database_function         = 5              " Fct. mod. for data capture/disposal is missing
-      no_show_auth                 = 6              " no display authorization
-      no_tvdir_entry               = 7              " View/table is not entered in TVDIR
-      no_upd_auth                  = 8              " no maintenance or display authorization
-      only_show_allowed            = 9              " Display, but not maintain authorization
-      system_failure               = 10             " System locking error
-      unknown_field_in_dba_sellist = 11             " Selection table contains unknown field
-      view_not_found               = 12             " View/table not found in DDIC
+      client_reference             = 1 
+      foreign_lock                 = 2 
+      invalid_action               = 3 
+      no_clientindependent_auth    = 4 
+      no_database_function         = 5 
+      no_show_auth                 = 6 
+      no_tvdir_entry               = 7 
+      no_upd_auth                  = 8 
+      only_show_allowed            = 9 
+      system_failure               = 10
+      unknown_field_in_dba_sellist = 11
+      view_not_found               = 12
       OTHERS                       = 13.
   IF sy-subrc <> 0 .
     IF sy-msgid IS NOT INITIAL AND
@@ -257,17 +267,17 @@ FORM f_call_sm30.
 ENDFORM.
 
 FORM f_build_container.
-*— Declarations for dynamic data
+"eclarations for dynamic data
   DATA gt_data TYPE REF TO data.
 
   CLEAR: salv.
 
   IF doc_container IS NOT INITIAL.
-*    CLEAR doc_container.
+
     doc_container->free(
       EXCEPTIONS
-        cntl_error        = 1                " CNTL_ERROR
-        cntl_system_error = 2                " CNTL_SYSTEM_ERROR
+        cntl_error        = 1
+        cntl_system_error = 2
         OTHERS            = 3 ).
     IF sy-subrc <> 0 AND
       sy-msgid IS NOT INITIAL AND
@@ -279,7 +289,7 @@ FORM f_build_container.
 
   CHECK ptable IS NOT INITIAL.
 
-*— Create dynamic internal table
+"Create dynamic internal table
   CREATE DATA gt_data TYPE TABLE OF (ptable).
   ASSIGN gt_data->* TO <ft_tab>.
 
@@ -313,7 +323,7 @@ FORM f_build_container.
                          ( low    = CONV fdname( ls_fieldlist1-fieldname ) ) ).
 
 
-* From the list of all components get the key components
+" From the list of all components get the key components
   DATA(lt_components) = lo_struct_descr1->get_components( ).
   DATA(lt_key_compnents) = lt_components.
 
@@ -351,12 +361,11 @@ FORM f_build_container.
       repid = sy-repid
       dynnr = sy-dynnr
       side  = doc_container->dock_at_bottom
-*     extension = 325
       ratio = 95.
 
   IF salv IS INITIAL.
     TRY.
-*— Create Instance
+"Create Instance
         CALL METHOD cl_salv_table=>factory
           EXPORTING
             r_container    = doc_container
@@ -372,7 +381,7 @@ FORM f_build_container.
     salv->get_columns( )->set_optimize( abap_true ).
     salv->get_selections( )->set_selection_mode( if_salv_c_selection_mode=>row_column ). "Allow single row Selection"
 
-*— Display ALV \Output
+"Display ALV \Output
     salv->display( ).
   ENDIF.
 ENDFORM.
@@ -384,13 +393,10 @@ FORM get_data_mv.
 
   CALL FUNCTION 'VIEW_GET_DATA'
     EXPORTING
-      view_name              = lv_view_name      " Name of the View/Table to be Edited
+      view_name              = lv_view_name
       with_authority_check   = abap_true
     TABLES
-*     dba_sellist            =                  " Database Access Selection Conditions
       data                   = <ft_tab>
-*    CHANGING
-*     org_crit_inst          =                  " Organizational criterion
     EXCEPTIONS
       no_viewmaint_tool      = 1
       no_authority           = 2
@@ -422,8 +428,6 @@ FORM f_export_to_pc.
 
 
   ENDIF.
-*  ENDIF.
-
 ENDFORM.
 
 FORM pickup_path_file CHANGING filepath.
@@ -439,12 +443,12 @@ FORM f_validate_table.
     MESSAGE 'Select table Name to be uploaded.' TYPE 'S'.
   ELSE.
 
-*— Upload only Tables in customer namespace
+"Upload only Tables in customer namespace
     IF ptable+0(1) NE 'Z' AND ptable+0(1) NE 'Y'.
       MESSAGE 'Only tables in customer namespace can be uploaded.' TYPE 'S'. "'E'.
     ENDIF.
 
-*— Only transparent tables can be uploaded
+"Only transparent tables can be uploaded
     SELECT SINGLE tabname
     FROM dd02l INTO @DATA(lv_tabname)
     WHERE tabname = @ptable AND
