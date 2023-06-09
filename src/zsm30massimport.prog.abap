@@ -136,7 +136,7 @@ FORM import_file CHANGING import_data_csv TYPE _text_tab.
        CHANGING
          data_tab        = import_data_csv
        EXCEPTIONS
-         file_open_error         = 1
+         file_open_error = 1
          file_read_error         = 2
          OTHERS                  = 3 ).
 
