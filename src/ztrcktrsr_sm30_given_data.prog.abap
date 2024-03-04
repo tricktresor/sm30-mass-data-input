@@ -14,9 +14,9 @@ START-OF-SELECTION.
   DATA(import_table) = CONV tabname( 'ZMVDIMP' ).
   IF p_demo = abap_true.
     DATA(import_data_csv) = VALUE _text_tab(
-        ( line = '100;123;1000;6600' )
-        ( line = '100;333;1000;6600' )
-        ( line = '100;56;3000;2200' )
+        ( line = '100;123;1000;6600;200.40;EUR' )
+        ( line = '100;333;1000;6600;120.23;EUR' )
+        ( line = '100;56;3000;2200;455.20;EUR' )
         ).
     DATA(delimiter) = ';'.
   ELSE.
@@ -50,6 +50,8 @@ START-OF-SELECTION.
   CREATE DATA import_data_table_ref TYPE HANDLE import_data_table.
   ASSIGN import_data_table_ref->* TO <import_data_tab>.
 
+  DATA import_data_tab_c TYPE STANDARD TABLE OF tab512.
+
 
   LOOP AT import_data_csv INTO DATA(csv_line).
     CLEAR <import_data_line>.
@@ -61,15 +63,26 @@ START-OF-SELECTION.
     ASSIGN COMPONENT 'ACTION' OF STRUCTURE <import_data_line> TO FIELD-SYMBOL(<action>).
     <action> = 'N'.
     APPEND <import_data_line> TO <import_data_tab>.
+    APPEND INITIAL LINE TO import_data_tab_c ASSIGNING FIELD-SYMBOL(<data_line_c>).
+    cl_abap_container_utilities=>fill_container_c(
+      EXPORTING
+        im_value               = <import_data_line>
+      IMPORTING
+        ex_container           = <data_line_c>-wa
+      EXCEPTIONS
+        illegal_parameter_type = 1
+        OTHERS                 = 2 ).
+    IF sy-subrc <> 0.
+      CONTINUE.
+    ENDIF.
   ENDLOOP.
-
 
   CALL FUNCTION 'VIEW_MAINTENANCE_GIVEN_DATA'
     EXPORTING
       action                       = 'U'
       view_name                    = import_table
     TABLES
-      data                         = <import_data_tab>
+      data                         = import_data_tab_c "<import_data_tab>
     EXCEPTIONS
       client_reference             = 1              " View is tied to another client
       foreign_lock                 = 2              " View/Table is locked by another user
